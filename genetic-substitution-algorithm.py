@@ -158,41 +158,17 @@ def score(text, ref_bigram):
 ###############################################################################
 # Decryption routine
 
-def decrypt():
+def get_bigrams():
     # Read the reference text into memory
     with open(REFFILE) as fh:
         reftext = fh.read().upper()
-
-    # Analyze the reference text and compute a mapping of each pair of letters
-    # to the number of occurrences in the reference text
-    #
-    #    ref_bigram = {
-    #        'AA': 1,
-    #        'AB': 64,
-    #        'AC': 354,
-    #        'AD': 279,
-    #        'AE': 26,
-    #        'AF': 52,
-    #        'AG': 241,
-    #        'AH': 2,
-    #        'AI': 260,
-    #        'AL': 1141,
-    #        'AM': 353,
-    #        ...
-    #        'VE': 958,
-    #        'VI': 727,
-    #        'VO': 409,
-    #        'VR': 43,
-    #        'VU': 33,
-    #        'VV': 28,
-    #        'ZA': 249,
-    #        'ZE': 35,
-    #        'ZI': 240,
-    #        'ZO': 49,
-    #        'ZZ': 103,
-    #    }
-    #
     ref_bigram = bigram(reftext)
+    return ref_bigram
+
+
+def decrypt():
+
+    ref_bigram = get_bigrams()
 
     # Read the ciphertext into memory
     with open(INFILE) as fh:
