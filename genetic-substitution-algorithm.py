@@ -17,11 +17,11 @@ REFFILE = 'shakespeare.txt'
 CHARS = 'ABCDEFGHILMNOPQRSTUVZ'
 
 # Size of the population to use for the genetic algorithm
-POPULATION_SIZE = 50
+POPULATION_SIZE = 100
 
 # Size of the population slice of best peforming solutions to keep at each
 # iteration
-TOP_POPULATION = 10
+TOP_POPULATION = 20
 
 # Number of intervals for which the best score has to be stable before aborting
 # the genetic algorith
