@@ -11,7 +11,7 @@ import random
 INFILE = 'ciphertext.txt'
 
 # Path to the text file containing the reference text
-REFFILE = 'paradiso.txt'
+REFFILE = 'shakespeare.txt'
 
 # Encrypted chars in the ciphertext
 CHARS = 'ABCDEFGHILMNOPQRSTUVZ'
@@ -25,7 +25,7 @@ TOP_POPULATION = 10
 
 # Number of intervals for which the best score has to be stable before aborting
 # the genetic algorith
-STABILITY_INTERVALS = 20
+STABILITY_INTERVALS = 50
 
 # Number of crossovers to execute for each new child in the genetic algorithm
 CROSSOVER_COUNT = 2
@@ -109,7 +109,7 @@ def select(population, ciphertext, ref_bigram):
         scores.append((score(decode(ciphertext, p), ref_bigram), p))
 
     # Sort the solutions by their score
-    sorted_population = sorted(scores, reverse=True)
+    sorted_population = sorted(scores, reverse=True, key=lambda a: a[0])
 
     # Select only the best TOP_POPULATION solutions
     selected_population = sorted_population[:TOP_POPULATION]
@@ -159,16 +159,31 @@ def score(text, ref_bigram):
 # Decryption routine
 
 def get_bigrams():
+
     # Read the reference text into memory
     with open(REFFILE) as fh:
         reftext = fh.read().upper()
     ref_bigram = bigram(reftext)
+    print(ref_bigram)
     return ref_bigram
 
 
-def decrypt():
+def parse_bigram_file():
+    count = {}
+    with open('bigram.txt', "r") as f:
+        lines = f.readlines()
+    for line in lines:
+        contents = line.split(" ")
+        bigram = contents[0]
+        score = int(contents[1])
+        count[bigram] = score
+    print(count)
+    return count
 
-    ref_bigram = get_bigrams()
+
+def decrypt():
+    ref_bigram2 = get_bigrams()
+    ref_bigram = parse_bigram_file()
 
     # Read the ciphertext into memory
     with open(INFILE) as fh:
@@ -198,7 +213,7 @@ def decrypt():
             last_score = best_score
         else:
             last_score_increase += 1
-        print(best_score)
+        print(best_score, last_score_increase)
 
         iterations += 1
 
