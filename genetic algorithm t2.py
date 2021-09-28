@@ -3,6 +3,7 @@ see:
 http://www.obitko.com/tutorials/genetic-algorithms/ga-basic-description.php
 """
 import random
+import sys
 
 class GeneticAlgorithm(object):
     def __init__(self, genetics):
@@ -23,7 +24,7 @@ class GeneticAlgorithm(object):
         size = len(fits)
         nexts = []
         while len(nexts) < size:
-            parents = parents_generator.next()
+            parents = next(parents_generator)
             cross = random.random() < self.genetics.probability_crossover()
             children = self.genetics.crossover(parents) if cross else parents
             for ch in children:
@@ -87,7 +88,7 @@ if __name__ == "__main__":
     """
     class GuessText(GeneticFunctions):
         def __init__(self, target_text,
-                     limit=200, size=400,
+                     limit=2000, size=400,
                      prob_crossover=0.9, prob_mutation=0.2):
             self.target = self.text2chromo(target_text)
             self.counter = 0
@@ -120,10 +121,10 @@ if __name__ == "__main__":
                 best = max(fits)
                 worst = min(fits)
                 ave = sum(fits) / len(fits)
-                print(
-                    "[G %3d] score=(%4d, %4d, %4d): %r" %
-                    (self.counter, best, ave, worst,
-                     self.chromo2text(best_match)))
+
+                best_text = self.chromo2text(best_match)
+                sys.stdout.write('\010' * len(best_text))
+                print(best_text, end="")
                 pass
             return self.counter >= self.limit
 
@@ -169,5 +170,8 @@ if __name__ == "__main__":
             return [random.randint(1, 255) for i in range(len(self.target))]
         pass
 
-    GeneticAlgorithm(GuessText("Hello World!")).run()
-    pass
+    with open("shakespeare2.txt") as f:
+        content = f.read()
+
+    GeneticAlgorithm(GuessText(content)).run()
+    input("")
